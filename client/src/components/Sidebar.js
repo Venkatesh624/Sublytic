@@ -8,7 +8,7 @@ function Sidebar() {
     <nav className="sidebar">
       <div className="sidebar-logo">SubTracker AI</div>
       <ul>
-        <li><NavLink to="/" end><FaHome /> Dashboard</NavLink></li>
+        <li><NavLink to="/home"><FaHome /> Dashboard</NavLink></li>
         <li><NavLink to="/subscriptions"><FaList /> Subscriptions</NavLink></li>
         <li><NavLink to="/insights"><FaChartPie /> Insights</NavLink></li>
         <li><NavLink to="/calendar"><FaCalendarAlt /> Calendar</NavLink></li>

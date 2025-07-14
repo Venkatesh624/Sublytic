@@ -8,7 +8,8 @@ db.prepare(`CREATE TABLE IF NOT EXISTS subscriptions (
   cost REAL,
   billingCycle TEXT,
   firstBillDate TEXT,
-  notes TEXT
+  notes TEXT,
+  username TEXT
 )`).run();
 
 module.exports = db;

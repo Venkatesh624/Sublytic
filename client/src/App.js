@@ -5,6 +5,7 @@ import Insights from './pages/insights/Insights';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/home/Home';
+import LandingPage from './pages/landing/LandingPage';
 import Sidebar from './components/Sidebar';
 import SubscriptionsPage from './pages/subscriptions/SubscriptionsPage';
 import InsightsPage from './pages/insights/InsightsPage';
@@ -17,24 +18,21 @@ import './App.css';
 function App() {
     return (
         <Router>
-            <div style={{ display: 'flex' }}>
-                <Sidebar />
-                <div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/home" element={<Home />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/subscriptions" element={<SubscriptionsPage />} />
-                        <Route path="/insights" element={<InsightsPage />} />
-                        <Route path="/calendar" element={<CalendarPage />} />
-                        <Route path="/whatif" element={<WhatIfPage />} />
-                        <Route path="/notifications" element={<NotificationsPage />} />
-                        <Route path="/settings" element={<SettingsPage />} />
-                    </Routes>
-                </div>
-            </div>
+            <Routes>
+                {/* Landing page is default */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                {/* Sidebar for main app pages */}
+                <Route path="/home" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><Home showSidebar={true} /></div></div>} />
+                <Route path="/dashboard" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><Dashboard /></div></div>} />
+                <Route path="/subscriptions" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><SubscriptionsPage /></div></div>} />
+                <Route path="/insights" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><InsightsPage /></div></div>} />
+                <Route path="/calendar" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><CalendarPage /></div></div>} />
+                <Route path="/whatif" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><WhatIfPage /></div></div>} />
+                <Route path="/notifications" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><NotificationsPage /></div></div>} />
+                <Route path="/settings" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><SettingsPage /></div></div>} />
+            </Routes>
         </Router>
     );
 }

@@ -70,8 +70,10 @@ function SubscriptionsPage() {
       .then(() => refreshSubs());
   };
 
+  // Defensive: ensure subs is always an array
+  const safeSubs = Array.isArray(subs) ? subs : [];
   // Add nextRenewal for each sub (no conversion)
-  const subsWithRenewal = subs.map(sub => ({
+  const subsWithRenewal = safeSubs.map(sub => ({
     ...sub,
     nextRenewal: calcNextRenewal(sub.firstBillDate, sub.billingCycle)
   }));

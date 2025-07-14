@@ -11,8 +11,10 @@ function UpcomingRenewals() {
       .catch(() => setSubs([]));
   }, []);
 
+  // Defensive: ensure subs is always an array
+  const safeSubs = Array.isArray(subs) ? subs : [];
   // Find next 3 upcoming renewals
-  const upcoming = subs
+  const upcoming = safeSubs
     .map(sub => ({ name: sub.name, date: new Date(sub.firstBillDate) }))
     .filter(sub => sub.date >= new Date())
     .sort((a, b) => a.date - b.date)

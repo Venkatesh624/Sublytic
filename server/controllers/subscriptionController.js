@@ -3,7 +3,9 @@ const db = require('../models/subscriptionModel');
 
 exports.getAllSubscriptions = (req, res) => {
   try {
-    const subs = db.prepare('SELECT * FROM subscriptions').all();
+    const username = req.query.username;
+    if (!username) return res.status(400).json({ error: 'Missing username' });
+    const subs = db.prepare('SELECT * FROM subscriptions WHERE username = ?').all(username);
     res.json(subs);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch subscriptions', details: err.message });
@@ -12,12 +14,12 @@ exports.getAllSubscriptions = (req, res) => {
 
 exports.addSubscription = (req, res) => {
   try {
-    const { name, category, cost, billingCycle, firstBillDate, notes } = req.body;
-    if (!name || !category || !cost || !billingCycle || !firstBillDate) {
+    const { name, category, cost, billingCycle, firstBillDate, notes, username } = req.body;
+    if (!name || !category || !cost || !billingCycle || !firstBillDate || !username) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
-    const stmt = db.prepare('INSERT INTO subscriptions (name, category, cost, billingCycle, firstBillDate, notes) VALUES (?, ?, ?, ?, ?, ?)');
-    const info = stmt.run(name, category, cost, billingCycle, firstBillDate, notes);
+    const stmt = db.prepare('INSERT INTO subscriptions (name, category, cost, billingCycle, firstBillDate, notes, username) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    const info = stmt.run(name, category, cost, billingCycle, firstBillDate, notes, username);
     const sub = db.prepare('SELECT * FROM subscriptions WHERE id = ?').get(info.lastInsertRowid);
     res.json(sub);
   } catch (err) {

@@ -11,8 +11,10 @@ function RecentActivity() {
       .catch(() => setSubs([]));
   }, []);
 
+  // Defensive: ensure subs is always an array
+  const safeSubs = Array.isArray(subs) ? subs : [];
   // Generate recent activity from subscription changes
-  const activities = subs.slice(-4).reverse().map(sub => `Added or updated ${sub.name} subscription`);
+  const activities = safeSubs.slice(-4).reverse().map(sub => `Added or updated ${sub.name} subscription`);
 
   return (
     <div className="recent-activity">

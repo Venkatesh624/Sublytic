@@ -13,8 +13,10 @@ function RenewalCalendar() {
       .catch(() => setSubscriptions([]));
   }, []);
 
+  // Defensive: ensure subscriptions is always an array
+  const safeSubs = Array.isArray(subscriptions) ? subscriptions : [];
   // Find subscriptions renewing on selected date
-  const renewals = subscriptions.filter(sub => {
+  const renewals = safeSubs.filter(sub => {
     // Accept both YYYY-MM-DD and YYYY-MM-DDTHH:mm:ss formats
     const subDate = new Date(sub.firstBillDate);
     return (

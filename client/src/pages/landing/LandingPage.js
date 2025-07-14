@@ -3,36 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
 
 function LandingPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Placeholder: Add authentication logic here
-    navigate('/'); // Redirect to dashboard after login
-  };
 
   return (
     <div className="landing-page">
       <h1>Welcome to SubTracker AI</h1>
-      <form className="login-form" onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center', marginTop: '2rem' }}>
+        <button style={{ padding: '0.75rem 2rem', fontSize: '1.1rem', background: '#2a7ae2', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }} onClick={() => navigate('/login')}>Login</button>
+        <button style={{ padding: '0.75rem 2rem', fontSize: '1.1rem', background: '#fff', color: '#2a7ae2', border: '2px solid #2a7ae2', borderRadius: '6px', cursor: 'pointer' }} onClick={() => navigate('/register')}>Register</button>
+      </div>
     </div>
   );
 }

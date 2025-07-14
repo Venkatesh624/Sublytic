@@ -3,18 +3,33 @@ import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 function Register() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Placeholder: Add registration logic here
-    if (password === confirmPassword) {
-      navigate('/home'); // Redirect to home after registration
-    } else {
-      alert('Passwords do not match');
+    setError('');
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    try {
+      const res = await fetch('/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        navigate('/home');
+      } else {
+        setError(data.message || 'Registration failed');
+      }
+    } catch (err) {
+      setError('Network error');
     }
   };
 
@@ -23,10 +38,10 @@ function Register() {
       <h1>Register for SubTracker AI</h1>
       <form className="register-form" onSubmit={handleSubmit}>
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
           required
         />
         <input
@@ -45,6 +60,7 @@ function Register() {
         />
         <button type="submit">Register</button>
       </form>
+      {error && <div style={{ color: 'red', marginTop: 10 }}>{error}</div>}
       <p>Already have an account? <span className="link" onClick={() => navigate('/login')}>Login</span></p>
     </div>
   );

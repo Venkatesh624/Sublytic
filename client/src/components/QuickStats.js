@@ -11,15 +11,16 @@ function QuickStats() {
       .catch(() => setSubs([]));
   }, []);
 
-  const monthlySpend = subs.reduce((sum, sub) => sum + Number(sub.cost), 0).toFixed(2);
-  const activeCount = subs.length;
+  const safeSubs = Array.isArray(subs) ? subs : [];
+  const monthlySpend = safeSubs.reduce((sum, sub) => sum + Number(sub.cost), 0).toFixed(2);
+  const activeCount = safeSubs.length;
   // Find next renewal date
-  const nextRenewal = subs.length > 0 ? subs.reduce((min, sub) => {
+  const nextRenewal = safeSubs.length > 0 ? safeSubs.reduce((min, sub) => {
     const date = new Date(sub.firstBillDate);
     return (!min || date < min) ? date : min;
   }, null) : null;
   // Find top value score (placeholder: highest cost)
-  const topValue = subs.length > 0 ? subs.reduce((max, sub) => Number(sub.cost) > Number(max.cost) ? sub : max, subs[0]) : null;
+  const topValue = safeSubs.length > 0 ? safeSubs.reduce((max, sub) => Number(sub.cost) > Number(max.cost) ? sub : max, safeSubs[0]) : null;
 
   const stats = [
     { label: 'Monthly Spend', value: `$${monthlySpend}` },

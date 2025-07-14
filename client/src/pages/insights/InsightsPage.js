@@ -15,24 +15,26 @@ function InsightsPage() {
   }, []);
 
 
+  // Defensive: ensure subs is always an array
+  const safeSubs = Array.isArray(subs) ? subs : [];
   // Calculate total cost in dollars (no conversion)
-  const totalCost = subs.reduce((sum, sub) => sum + Number(sub.cost), 0).toFixed(2);
+  const totalCost = safeSubs.reduce((sum, sub) => sum + Number(sub.cost), 0).toFixed(2);
 
   // Pie chart data: spend by subscription
-  const pieData = subs.map(sub => ({ name: sub.name, value: Number(sub.cost) }));
+  const pieData = safeSubs.map(sub => ({ name: sub.name, value: Number(sub.cost) }));
 
   // Bar chart data: spend by billing cycle
-  const billingCycles = Array.from(new Set(subs.map(sub => sub.billingCycle)));
+  const billingCycles = Array.from(new Set(safeSubs.map(sub => sub.billingCycle)));
   const barData = billingCycles.map(cycle => ({
     billingCycle: cycle,
-    total: subs.filter(sub => sub.billingCycle === cycle).reduce((sum, sub) => sum + Number(sub.cost), 0)
+    total: safeSubs.filter(sub => sub.billingCycle === cycle).reduce((sum, sub) => sum + Number(sub.cost), 0)
   }));
 
   // Leaderboard: top 3 most expensive subscriptions
-  const leaderboard = [...subs].sort((a, b) => Number(b.cost) - Number(a.cost)).slice(0, 3);
+  const leaderboard = [...safeSubs].sort((a, b) => Number(b.cost) - Number(a.cost)).slice(0, 3);
 
   // Suggestions: highlight subscriptions over $20/month
-  const suggestions = subs.filter(sub => Number(sub.cost) > 20);
+  const suggestions = safeSubs.filter(sub => Number(sub.cost) > 20);
 
   return (
     <div className="insights-page">

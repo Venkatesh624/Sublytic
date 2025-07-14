@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import UserMenu from '../../components/UserMenu';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import QuickStats from '../../components/QuickStats';
@@ -14,21 +15,25 @@ import NotificationBanner from '../../components/NotificationBanner';
 function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
+  // Get username from localStorage
+  const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [showForm, setShowForm] = useState(false);
   const [subscriptions, setSubscriptions] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [notification, setNotification] = useState('');
 
   useEffect(() => {
-    fetch('/api/subscriptions')
+    if (!username) return;
+    fetch(`/api/subscriptions?username=${encodeURIComponent(username)}`)
       .then(res => res.json())
       .then(data => setSubscriptions(data))
       .catch(() => setSubscriptions([]));
-  }, []);
+  }, [username]);
 
   // Always fetch latest data after add/update/delete
   const refreshSubs = () => {
-    fetch('/api/subscriptions')
+    if (!username) return;
+    fetch(`/api/subscriptions?username=${encodeURIComponent(username)}`)
       .then(res => res.json())
       .then(data => setSubscriptions(data))
       .catch(() => setSubscriptions([]));
@@ -39,7 +44,7 @@ function Home() {
       fetch(`/api/subscriptions/${subscriptions[editIndex].id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sub)
+        body: JSON.stringify({ ...sub, username })
       })
         .then(res => res.json())
         .then(() => {
@@ -51,7 +56,7 @@ function Home() {
       fetch('/api/subscriptions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sub)
+        body: JSON.stringify({ ...sub, username })
       })
         .then(res => res.json())
         .then(() => {
@@ -69,10 +74,12 @@ function Home() {
     fetch(`/api/subscriptions/${subscriptions[i].id}`, { method: 'DELETE' })
       .then(() => refreshSubs());
   };
-  const filteredSubs = subscriptions.filter(sub => sub.name.toLowerCase().includes(search.toLowerCase()));
+  const safeSubs = Array.isArray(subscriptions) ? subscriptions : [];
+  const filteredSubs = safeSubs.filter(sub => sub.name && sub.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <div className="home-page">
+      <UserMenu username={username} />
       <NotificationBanner message={notification} onClose={() => setNotification('')} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Welcome to SubTracker AI</h1>
