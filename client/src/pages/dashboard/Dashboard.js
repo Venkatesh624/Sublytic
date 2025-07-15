@@ -6,7 +6,7 @@ import ExpenseChart from '../../components/ExpenseChart';
 function Dashboard() {
   return (
     <div className="dashboard">
-      <h1>SubTracker AI Dashboard</h1>
+      <h1>Sublytic Dashboard</h1>
       <SubscriptionList />
       <RenewalCalendar />
       <ExpenseChart />

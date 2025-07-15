@@ -6,7 +6,7 @@ import './Sidebar.css';
 function Sidebar() {
   return (
     <nav className="sidebar">
-      <div className="sidebar-logo">SubTracker AI</div>
+      <div className="sidebar-logo">Sublytic</div>
       <ul>
         <li><NavLink to="/home"><FaHome /> Dashboard</NavLink></li>
         <li><NavLink to="/subscriptions"><FaList /> Subscriptions</NavLink></li>

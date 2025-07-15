@@ -6,7 +6,12 @@ function WhatIfPage() {
   const [newCost, setNewCost] = useState('');
 
   useEffect(() => {
-    fetch('/api/subscriptions')
+    const token = localStorage.getItem('token');
+    fetch('/api/subscriptions', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => setSubs(data.map(s => ({ name: s.name, cost: s.cost, active: true }))))
       .catch(() => setSubs([]));

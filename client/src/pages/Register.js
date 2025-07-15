@@ -35,7 +35,7 @@ function Register() {
 
   return (
     <div className="register-page">
-      <h1>Register for SubTracker AI</h1>
+      <h1>Register for Sublytic</h1>
       <form className="register-form" onSubmit={handleSubmit}>
         <input
           type="text"

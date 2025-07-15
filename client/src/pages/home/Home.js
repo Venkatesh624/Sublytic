@@ -23,8 +23,13 @@ function Home() {
   const [notification, setNotification] = useState('');
 
   useEffect(() => {
-    if (!username) return;
-    fetch(`/api/subscriptions?username=${encodeURIComponent(username)}`)
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    fetch('/api/subscriptions', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => setSubscriptions(data))
       .catch(() => setSubscriptions([]));
@@ -32,8 +37,13 @@ function Home() {
 
   // Always fetch latest data after add/update/delete
   const refreshSubs = () => {
-    if (!username) return;
-    fetch(`/api/subscriptions?username=${encodeURIComponent(username)}`)
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    fetch('/api/subscriptions', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => setSubscriptions(data))
       .catch(() => setSubscriptions([]));
@@ -41,10 +51,14 @@ function Home() {
 
   const handleSave = (sub) => {
     if (editIndex !== null) {
+      const token = localStorage.getItem('token');
       fetch(`/api/subscriptions/${subscriptions[editIndex].id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...sub, username })
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(sub)
       })
         .then(res => res.json())
         .then(() => {
@@ -53,10 +67,14 @@ function Home() {
           setNotification('Subscription updated successfully!');
         });
     } else {
+      const token = localStorage.getItem('token');
       fetch('/api/subscriptions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...sub, username })
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(sub)
       })
         .then(res => res.json())
         .then(() => {
@@ -71,7 +89,13 @@ function Home() {
     setShowForm(true);
   };
   const handleDelete = (i) => {
-    fetch(`/api/subscriptions/${subscriptions[i].id}`, { method: 'DELETE' })
+    const token = localStorage.getItem('token');
+    fetch(`/api/subscriptions/${subscriptions[i].id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(() => refreshSubs());
   };
   const safeSubs = Array.isArray(subscriptions) ? subscriptions : [];
@@ -82,7 +106,7 @@ function Home() {
       <UserMenu username={username} />
       <NotificationBanner message={notification} onClose={() => setNotification('')} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Welcome to SubTracker AI</h1>
+        <h1>Welcome to Sublytic</h1>
         <HelpTooltip />
       </div>
       <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>

@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const userModel = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || 'subtracker_secret_key';
 
 const register = (req, res) => {
   const { username, password } = req.body;
@@ -35,7 +37,9 @@ const login = (req, res) => {
     if (err || !isMatch) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
-    res.status(200).json({ message: 'Login successful.', userId: user.id });
+    // Generate JWT token
+    const token = jwt.sign({ username: user.username, userId: user.id }, JWT_SECRET, { expiresIn: '2h' });
+    res.status(200).json({ message: 'Login successful.', token, userId: user.id, username: user.username });
   });
 };
 

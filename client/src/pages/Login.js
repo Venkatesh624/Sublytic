@@ -19,8 +19,9 @@ function Login() {
       });
       const data = await res.json();
       if (res.ok) {
-        // Store username in localStorage for session
-        localStorage.setItem('username', username);
+        // Store token and username in localStorage for session
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
         navigate('/home');
       } else {
         setError(data.message || 'Login failed');
@@ -32,7 +33,7 @@ function Login() {
 
   return (
     <div className="login-page">
-      <h1>Login to SubTracker AI</h1>
+      <h1>Login to Sublytic</h1>
       <form className="login-form" onSubmit={handleSubmit}>
         <input
           type="text"

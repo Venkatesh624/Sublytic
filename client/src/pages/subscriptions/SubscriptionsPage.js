@@ -21,7 +21,13 @@ function SubscriptionsPage() {
   const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
-    fetch('/api/subscriptions')
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    fetch('/api/subscriptions', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => setSubs(data))
       .catch(() => setSubs([]));
@@ -29,17 +35,27 @@ function SubscriptionsPage() {
 
   // Always fetch latest data after add/update/delete
   const refreshSubs = () => {
-    fetch('/api/subscriptions')
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    fetch('/api/subscriptions', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => setSubs(data))
       .catch(() => setSubs([]));
   };
 
   const handleSave = (sub) => {
+    const token = localStorage.getItem('token');
     if (editIndex !== null) {
       fetch(`/api/subscriptions/${subs[editIndex].id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(sub)
       })
         .then(res => res.json())
@@ -50,7 +66,10 @@ function SubscriptionsPage() {
     } else {
       fetch('/api/subscriptions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(sub)
       })
         .then(res => res.json())
@@ -66,7 +85,12 @@ function SubscriptionsPage() {
 
   const handleDelete = (i) => {
     if (!window.confirm('Are you sure you want to delete this subscription?')) return;
-    fetch(`/api/subscriptions/${subs[i].id}`, { method: 'DELETE' })
+    fetch(`/api/subscriptions/${subs[i].id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(() => refreshSubs());
   };
 

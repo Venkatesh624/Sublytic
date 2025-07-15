@@ -13,7 +13,7 @@ function HelpTooltip() {
       />
       {show && (
         <div className="tooltip-content">
-          <b>SubTracker AI Quick Help</b>
+          <b>Sublytic Quick Help</b>
           <ul>
             <li>Dashboard: Manage subscriptions & forecast expenses</li>
             <li>Insights: Analyze spending & value scores</li>

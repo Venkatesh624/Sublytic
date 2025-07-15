@@ -5,7 +5,13 @@ function QuickStats() {
   const [subs, setSubs] = useState([]);
 
   useEffect(() => {
-    fetch('/api/subscriptions')
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    fetch('/api/subscriptions', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => setSubs(data))
       .catch(() => setSubs([]));

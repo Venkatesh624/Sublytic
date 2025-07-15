@@ -7,7 +7,13 @@ function RenewalCalendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
-    fetch('/api/subscriptions')
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    fetch('/api/subscriptions', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => setSubscriptions(data))
       .catch(() => setSubscriptions([]));
