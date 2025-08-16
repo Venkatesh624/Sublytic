@@ -1,22 +1,83 @@
+
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { FaHome, FaList, FaChartPie, FaCalendarAlt, FaLightbulb, FaBell, FaCog } from 'react-icons/fa';
-import './Sidebar.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Layout, Menu } from 'antd';
+import {
+  HomeOutlined,
+  UnorderedListOutlined,
+  PieChartOutlined,
+  CalendarOutlined,
+  BulbOutlined,
+  BellOutlined,
+  SettingOutlined
+} from '@ant-design/icons';
+
+const { Sider } = Layout;
+
 
 function Sidebar() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const selectedKey = () => {
+    if (location.pathname.startsWith('/dashboard') || location.pathname === '/home') return '/home';
+    if (location.pathname.startsWith('/subscriptions')) return '/subscriptions';
+    if (location.pathname.startsWith('/insights')) return '/insights';
+    if (location.pathname.startsWith('/calendar')) return '/calendar';
+    if (location.pathname.startsWith('/whatif')) return '/whatif';
+    if (location.pathname.startsWith('/notifications')) return '/notifications';
+    if (location.pathname.startsWith('/settings')) return '/settings';
+    return location.pathname;
+  };
   return (
-    <nav className="sidebar">
-      <div className="sidebar-logo">Sublytic</div>
-      <ul>
-        <li><NavLink to="/home"><FaHome /> Dashboard</NavLink></li>
-        <li><NavLink to="/subscriptions"><FaList /> Subscriptions</NavLink></li>
-        <li><NavLink to="/insights"><FaChartPie /> Insights</NavLink></li>
-        <li><NavLink to="/calendar"><FaCalendarAlt /> Calendar</NavLink></li>
-        <li><NavLink to="/whatif"><FaLightbulb /> What-If</NavLink></li>
-        <li><NavLink to="/notifications"><FaBell /> Notifications</NavLink></li>
-        <li><NavLink to="/settings"><FaCog /> Settings</NavLink></li>
-      </ul>
-    </nav>
+    <Sider width={220} style={{ minHeight: '100vh', background: '#2a7ae2' }}>
+      <div style={{ color: '#fff', fontSize: 24, fontWeight: 'bold', padding: '32px 24px 24px 24px', letterSpacing: 1 }}>
+        Sublytic
+      </div>
+      <Menu
+        theme="dark"
+        mode="inline"
+        selectedKeys={[selectedKey()]}
+        style={{ background: '#2a7ae2', borderRight: 0 }}
+        onClick={({ key }) => navigate(key)}
+        items={[
+          {
+            key: '/home',
+            icon: <HomeOutlined />,
+            label: 'Dashboard',
+          },
+          {
+            key: '/subscriptions',
+            icon: <UnorderedListOutlined />,
+            label: 'Subscriptions',
+          },
+          {
+            key: '/insights',
+            icon: <PieChartOutlined />,
+            label: 'Insights',
+          },
+          {
+            key: '/calendar',
+            icon: <CalendarOutlined />,
+            label: 'Calendar',
+          },
+          {
+            key: '/whatif',
+            icon: <BulbOutlined />,
+            label: 'What-If',
+          },
+          {
+            key: '/notifications',
+            icon: <BellOutlined />,
+            label: 'Notifications',
+          },
+          {
+            key: '/settings',
+            icon: <SettingOutlined />,
+            label: 'Settings',
+          },
+        ]}
+      />
+    </Sider>
   );
 }
 

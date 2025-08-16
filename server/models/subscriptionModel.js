@@ -3,13 +3,14 @@ const db = require('../config/db');
 
 db.prepare(`CREATE TABLE IF NOT EXISTS subscriptions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT,
+  name TEXT NOT NULL,
   category TEXT,
-  cost REAL,
-  billingCycle TEXT,
-  firstBillDate TEXT,
+  cost REAL NOT NULL,
+  billingCycle TEXT NOT NULL,
+  firstBillDate TEXT NOT NULL,
   notes TEXT,
-  username TEXT
+  usageRating INTEGER,
+  username TEXT NOT NULL
 )`).run();
 
 module.exports = db;

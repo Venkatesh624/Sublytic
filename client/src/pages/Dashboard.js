@@ -1,7 +1,7 @@
 import React from 'react';
-import SubscriptionList from '../../components/subscriptions/list/SubscriptionList';
-import RenewalCalendar from '../../components/RenewalCalendar';
-import ExpenseChart from '../../components/ExpenseChart';
+import SubscriptionList from '../components/subscriptions/list/SubscriptionList';
+import RenewalCalendar from '../components/RenewalCalendar';
+import ExpenseChart from '../components/ExpenseChart';
 
 function Dashboard() {
   return (

@@ -1,22 +1,40 @@
-import React from 'react';
+
+import { List, Card, Button, Typography, Space, Empty } from 'antd';
 
 function SubscriptionList({ subscriptions, onEdit, onDelete }) {
   return (
-    <div className="subscription-list">
-      <h2>Your Subscriptions</h2>
+    <div className="subscription-list" style={{ background: 'none', boxShadow: 'none', padding: 0, marginBottom: 0 }}>
       {subscriptions.length === 0 ? (
-        <p>No subscriptions found.</p>
+        <Empty description="No subscriptions found." />
       ) : (
-        <ul>
-          {subscriptions.map((sub, idx) => (
-            <li key={sub.id || idx}>
-              <strong>{sub.name}</strong> ({sub.category}) - ${sub.cost} / {sub.billingCycle}<br />
-              Next Renewal: {sub.nextRenewal}<br />
-              <button onClick={() => onEdit(idx)}>Edit</button>
-              <button onClick={() => onDelete(idx)}>Delete</button>
-            </li>
-          ))}
-        </ul>
+        <List
+          grid={{ gutter: 16, column: 1 }}
+          dataSource={subscriptions}
+          renderItem={(sub, idx) => (
+            <List.Item key={sub.id || idx}>
+              <Card
+                title={<Typography.Text strong>{sub.name}</Typography.Text>}
+                extra={<Typography.Text type="secondary">{sub.category}</Typography.Text>}
+                style={{ borderRadius: 10 }}
+              >
+                <div style={{ marginBottom: 8 }}>
+                  <Typography.Text>${sub.cost} / {sub.billingCycle}</Typography.Text>
+                </div>
+                <div style={{ marginBottom: 8 }}>
+                  <Typography.Text type="secondary">Next Renewal: {sub.nextRenewal}</Typography.Text>
+                </div>
+                <Space>
+                  <Button size="small" type="primary" onClick={() => onEdit(idx)}>
+                    Edit
+                  </Button>
+                  <Button size="small" danger onClick={() => onDelete(idx)}>
+                    Delete
+                  </Button>
+                </Space>
+              </Card>
+            </List.Item>
+          )}
+        />
       )}
     </div>
   );

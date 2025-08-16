@@ -1,40 +1,64 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './pages/dashboard/Dashboard';
-import Insights from './pages/insights/Insights';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Home from './pages/home/Home';
-import LandingPage from './pages/landing/LandingPage';
-import Sidebar from './components/Sidebar';
-import SubscriptionsPage from './pages/subscriptions/SubscriptionsPage';
-import InsightsPage from './pages/insights/InsightsPage';
-import CalendarPage from './pages/calendar/CalendarPage';
-import WhatIfPage from './pages/whatif/WhatIfPage';
-import NotificationsPage from './pages/notifications/NotificationsPage';
-import SettingsPage from './pages/settings/SettingsPage';
-import './App.css';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Layout } from 'antd';
+import { AuthContext } from './context/AuthContext';
+import AppSidebar from './components/AppSidebar';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import HomePage from './pages/HomePage';
+import SubscriptionsPage from './pages/SubscriptionsPage';
+import InsightsPage from './pages/InsightsPage';
+import CalendarPage from './pages/CalendarPage';
+import WhatIfPage from './pages/WhatIfPage';
+import NotificationsPage from './pages/NotificationsPage';
+import SettingsPage from './pages/SettingsPage';
+import { NotificationsProvider } from './context/NotificationsContext';
+const { Content } = Layout;
+
+// This is the main layout for logged-in users, containing the sidebar and content area
+function AppLayout() {
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <AppSidebar />
+      <Layout>
+        <Content style={{ padding: 24 }}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/subscriptions" element={<SubscriptionsPage />} />
+            <Route path="/insights" element={<InsightsPage />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/what-if" element={<WhatIfPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            {/* If any other path is visited, redirect to the homepage */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Content>
+      </Layout>
+    </Layout>
+  );
+}
 
 function App() {
-    return (
-        <Router>
-            <Routes>
-                {/* Landing page is default */}
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                {/* Sidebar for main app pages */}
-                <Route path="/home" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><Home showSidebar={true} /></div></div>} />
-                <Route path="/dashboard" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><Dashboard /></div></div>} />
-                <Route path="/subscriptions" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><SubscriptionsPage /></div></div>} />
-                <Route path="/insights" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><InsightsPage /></div></div>} />
-                <Route path="/calendar" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><CalendarPage /></div></div>} />
-                <Route path="/whatif" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><WhatIfPage /></div></div>} />
-                <Route path="/notifications" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><NotificationsPage /></div></div>} />
-                <Route path="/settings" element={<div style={{ display: 'flex' }}><Sidebar /><div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f7f9fa' }}><SettingsPage /></div></div>} />
-            </Routes>
-        </Router>
-    );
+  const { user } = useContext(AuthContext);
+
+  return (
+    <Router>
+      <NotificationsProvider>
+        <Routes>
+          {/* Public routes only accessible when logged out */}
+          <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
+          <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/" />} />
+
+          {/* This is the gatekeeper for your main application */}
+          <Route
+            path="/*"
+            element={user ? <AppLayout /> : <Navigate to="/login" />}
+          />
+        </Routes>
+      </NotificationsProvider>
+    </Router>
+  );
 }
 
 export default App;

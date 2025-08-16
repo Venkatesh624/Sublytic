@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from 'react';
-import './UpcomingRenewals.css';
+import { Card, Typography, List } from 'antd';
 
 function UpcomingRenewals() {
   const [subs, setSubs] = useState([]);
@@ -27,14 +28,23 @@ function UpcomingRenewals() {
     .slice(0, 3);
 
   return (
-    <div className="upcoming-renewals">
-      <h3>Upcoming Renewals</h3>
-      <ul>
-        {upcoming.length === 0 ? <li>No upcoming renewals</li> : upcoming.map((r, i) => (
-          <li key={i}><b>{r.name}</b>: {r.date.toLocaleDateString()}</li>
-        ))}
-      </ul>
-    </div>
+    <Card
+      title={<Typography.Title level={5} style={{ margin: 0, color: '#2a7ae2' }}>Upcoming Renewals</Typography.Title>}
+      bordered={false}
+      style={{ borderRadius: 12, minHeight: 110, boxShadow: '0 2px 12px rgba(0,0,0,0.07)' }}
+      bodyStyle={{ padding: '1.2rem 1.2rem' }}
+    >
+      <List
+        size="small"
+        dataSource={upcoming}
+        locale={{ emptyText: 'No upcoming renewals' }}
+        renderItem={item => (
+          <List.Item style={{ padding: 0 }}>
+            <Typography.Text strong>{item.name}</Typography.Text>: {item.date.toLocaleDateString()}
+          </List.Item>
+        )}
+      />
+    </Card>
   );
 }
 

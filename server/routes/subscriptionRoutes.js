@@ -1,17 +1,16 @@
+// routes/subscriptionRoutes.js
 const express = require('express');
 const router = express.Router();
 const subscriptionController = require('../controllers/subscriptionController');
+const authenticateToken = require('../middleware/authMiddleware');
 
-// GET all subscriptions
+// Apply the middleware to all routes in this file
+router.use(authenticateToken);
+
+// Routes
 router.get('/', subscriptionController.getAllSubscriptions);
-
-// POST add subscription
 router.post('/', subscriptionController.addSubscription);
-
-// PUT update subscription
 router.put('/:id', subscriptionController.updateSubscription);
-
-// DELETE subscription
 router.delete('/:id', subscriptionController.deleteSubscription);
 
 module.exports = router;
